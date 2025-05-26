@@ -1,0 +1,12 @@
+services:
+  api:
+    build: 
+      context: ./LLM
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./LLM/app:/app
+    environment:
+      - ENVIRONMENT=development
+    restart: unless-stopped 
