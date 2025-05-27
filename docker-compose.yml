@@ -1,12 +1,29 @@
 services:
-  api:
-    build: 
-      context: ./LLM
-      dockerfile: Dockerfile
+  llm:
+    build: ./LLM
     ports:
       - "8000:8000"
     volumes:
       - ./LLM/app:/app
+    env_file:
+      - .env
     environment:
-      - ENVIRONMENT=development
-    restart: unless-stopped 
+      - LLM_API_KEY=${LLM_API_KEY}
+      - WHISPER_API_KEY=${WHISPER_API_KEY}
+    networks:
+      - app-network
+
+  streamlit:
+    build: ./streamlit
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./streamlit/app:/app
+    depends_on:
+      - llm
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge 

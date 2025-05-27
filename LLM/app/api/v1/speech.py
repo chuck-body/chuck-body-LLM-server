@@ -9,7 +9,7 @@ import uuid
 
 router = APIRouter()
 
-HUGGINGFACE_TOKEN = ""
+HUGGINGFACE_TOKEN = os.getenv("WHISPER_API_KEY")
 
 @router.post("/speech-to-text/")
 async def speech_to_text(audio_file: UploadFile = File(...)):

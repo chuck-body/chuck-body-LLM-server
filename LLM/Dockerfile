@@ -1,15 +1,18 @@
 FROM python:3.9-slim
 
-# 시스템 라이브러리 설치
-RUN apt-get update && apt-get install -y \
-    ffmpeg \
-    libportaudio2 \
-    && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
 
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    ffmpeg \
+    flac \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python packages
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+
+COPY app/ .
 
 EXPOSE 8000
 
