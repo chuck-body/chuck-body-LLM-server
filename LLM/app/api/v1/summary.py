@@ -29,7 +29,7 @@ async def summarize_text(request: TextRequest):
 					다음 텍스트 내용을 요약해줘. 최대 300자 이내로 요약해줘.
 					"""},
 					{'role':'user', 'content': 
-					"""
+					f"""
 					{request.text}
 					"""}
 				]

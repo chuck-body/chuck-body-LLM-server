@@ -11,12 +11,14 @@ router = APIRouter()
 
 HUGGINGFACE_TOKEN = os.getenv("WHISPER_API_KEY")
 
+
 @router.post("/speech-to-text/")
 async def speech_to_text(audio_file: UploadFile = File(...)):
     try:
         # 확장자 확인
         file_extension = os.path.splitext(audio_file.filename)[1].lower()
-        if file_extension not in ['.mp3', '.wav', '.ogg']:
+        print(f"file_extension: {file_extension}")
+        if file_extension not in ['.mp3', '.wav', '.ogg', '.m4a']:
             raise HTTPException(status_code=400, detail="지원하지 않는 파일 형식입니다.")
 
         # 파일 읽기
