@@ -6,18 +6,23 @@ import whisper
 import io
 import os
 import uuid
-from services.speech_service import speech_service
+
+from services.audio_to_tags_service import audio_to_tags_service
 
 router = APIRouter()
 
 HUGGINGFACE_TOKEN = os.getenv("WHISPER_API_KEY")
 
 
-@router.post("/speech-to-text/")
-async def speech_to_text(audio_file: UploadFile = File(...)):
+@router.post("/audio-to-tags/")
+async def audio_to_tags(audio_file: UploadFile = File(...)):
     try:
-        results = await speech_service(audio_file)
-
+        results = await audio_to_tags_service(audio_file)
+        
+        
+        results['success'] = True
+        
+        return JSONResponse(content=results)
         return JSONResponse(content={
             "success": True,
             "segments": results
