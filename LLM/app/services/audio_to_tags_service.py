@@ -9,9 +9,12 @@ def merge_text(audio_text):
     return result
 
 async def audio_to_tags_service(audio_file):
+    print("audio_to_tags_service start")
     results = await speech_service(audio_file)
     merged_text = merge_text(results)
     speaker_decied_text = speaker_decision_service(merged_text)
     summary_text = summary_service(speaker_decied_text)
+    summary_text["origin_text"] = speaker_decied_text
     print(f"summary_text: {summary_text}")
+    print("audio_to_tags_service done")
     return summary_text
