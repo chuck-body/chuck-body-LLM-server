@@ -17,7 +17,7 @@ class TextRequest(BaseModel):
     text: str
 
 
-@router.post("/summary/")
+@router.post("/summary")
 async def summarize_text(request: TextRequest):
     try:
         data = summary_service(request.text)

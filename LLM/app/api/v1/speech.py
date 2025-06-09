@@ -13,8 +13,11 @@ router = APIRouter()
 HUGGINGFACE_TOKEN = os.getenv("WHISPER_API_KEY")
 
 
-@router.post("/speech-to-text/")
-async def speech_to_text(audio_file: UploadFile = File(...), num_speakers: int = Query(2, ge=1, le=10)):
+@router.post("/speech-to-text")
+async def speech_to_text(
+    audio_file: UploadFile = File(...),
+    num_speakers: int = Query(..., ge=1, le=10)  # Form으로 변경, 유효성 검사는 그대로
+):
     try:
         results = await speech_service(audio_file, num_speakers)
 

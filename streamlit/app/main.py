@@ -19,6 +19,8 @@ with tab1:
     # 파일 업로더
     uploaded_file = st.file_uploader("음성 파일을 업로드하세요", type=['wav', 'mp3', 'ogg', 'm4a'], key="test_speech_to_text")
     
+    num_speakers1 = st.number_input("화자 수 (num_speakers)", min_value=1, max_value=10, value=2, step=1, key="num_speakers1")
+    
     if uploaded_file is not None:
         # 파일 저장
         with open(uploaded_file.name, "wb") as f:
@@ -29,7 +31,8 @@ with tab1:
             try:
                 # API 호출
                 files = {"audio_file": (uploaded_file.name, open(uploaded_file.name, "rb"), "audio/wav")}
-                response = requests.post("http://llm:8000/api/v1/speech-to-text/", files=files)
+                data = {"num_speakers": num_speakers1}
+                response = requests.post(f"http://llm:8000/api/v1/speech-to-text?num_speakers={data['num_speakers']}", files=files)
                 
                 if response.status_code == 200:
                     result = response.json()
@@ -59,7 +62,7 @@ with tab2:
             try:
                 # API 호출
                 response = requests.post(
-                    "http://llm:8000/api/v1/summary/",
+                    "http://llm:8000/api/v1/summary",
                     json={"text": text_input}
                 )
                 
@@ -88,7 +91,7 @@ with tab3:
             try:
                 # API 호출
                 response = requests.post(
-                    "http://llm:8000/api/v1/speaker_decision/",
+                    "http://llm:8000/api/v1/speaker_decision",
                     json={"text": text_input}
                 )
                 
@@ -111,6 +114,8 @@ with tab4:
     
     # 파일 업로더
     uploaded_file = st.file_uploader("음성 파일을 업로드하세요", type=['wav', 'mp3', 'ogg', 'm4a'], key="test_audio_to_tags")
+
+    num_speakers2 = st.number_input("화자 수 (num_speakers)", min_value=1, max_value=10, value=2, step=1, key="num_speakers2")
     
     if uploaded_file is not None:
         # 파일 저장
@@ -122,7 +127,8 @@ with tab4:
             try:
                 # API 호출
                 files = {"audio_file": (uploaded_file.name, open(uploaded_file.name, "rb"), "audio/wav")}
-                response = requests.post("http://llm:8000/api/v1/audio-to-tags/", files=files)
+                data = {"num_speakers": num_speakers2}
+                response = requests.post(f"http://llm:8000/api/v1/audio-to-tags?num_speakers={data['num_speakers']}", files=files)
                 
                 if response.status_code == 200:
                     result = response.json()

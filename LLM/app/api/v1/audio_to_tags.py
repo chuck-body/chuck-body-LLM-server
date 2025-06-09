@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException, Query
 from fastapi.responses import JSONResponse
 from pydub import AudioSegment
 from pyannote.audio import Pipeline
@@ -14,10 +14,13 @@ router = APIRouter()
 HUGGINGFACE_TOKEN = os.getenv("WHISPER_API_KEY")
 
 
-@router.post("/audio-to-tags/")
-async def audio_to_tags(audio_file: UploadFile = File(...)):
+@router.post("/audio-to-tags")
+async def audio_to_tags(
+    audio_file: UploadFile = File(...),
+    num_speakers: int = Query(..., ge=1, le=10)  # Form으로 변경, 유효성 검사는 그대로
+):
     try:
-        results = await audio_to_tags_service(audio_file)
+        results = await audio_to_tags_service(audio_file, num_speakers=num_speakers)
         
         
         results['success'] = True

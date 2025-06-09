@@ -16,7 +16,7 @@ router = APIRouter()
 class TextRequest(BaseModel):
     text: str
 
-@router.post("/speaker_decision/")
+@router.post("/speaker_decision")
 async def speaker_decision(request: TextRequest):
     try:
         data = speaker_decision_service(request.text)
