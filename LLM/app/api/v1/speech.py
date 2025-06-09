@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException, Query
 from fastapi.responses import JSONResponse
 from pydub import AudioSegment
 from pyannote.audio import Pipeline
@@ -14,9 +14,9 @@ HUGGINGFACE_TOKEN = os.getenv("WHISPER_API_KEY")
 
 
 @router.post("/speech-to-text/")
-async def speech_to_text(audio_file: UploadFile = File(...)):
+async def speech_to_text(audio_file: UploadFile = File(...), num_speakers: int = Query(2, ge=1, le=10)):
     try:
-        results = await speech_service(audio_file)
+        results = await speech_service(audio_file, num_speakers)
 
         return JSONResponse(content={
             "success": True,

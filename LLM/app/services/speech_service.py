@@ -8,7 +8,7 @@ from pyannote.audio import Pipeline
 
 HUGGINGFACE_TOKEN = os.getenv("WHISPER_API_KEY")
 
-async def speech_service(audio_file):
+async def speech_service(audio_file, num_speakers: int = 2):
     print("speech_service start")
     file_extension = os.path.splitext(audio_file.filename)[1].lower()
     print(f"file_extension: {file_extension}")
@@ -41,7 +41,7 @@ async def speech_service(audio_file):
 
     # PyAnnote 화자 분리
     pipeline = Pipeline.from_pretrained("pyannote/speaker-diarization", use_auth_token=HUGGINGFACE_TOKEN)
-    diarization = pipeline(temp_filename, num_speakers = 2) #화자의 수를 2명으로 제한
+    diarization = pipeline(temp_filename, num_speakers = num_speakers) #화자의 수를 2명으로 제한
 
     # 가장 많이 겹치는 화자 하나만 매칭
     def get_best_speaker(segment, diarization):
