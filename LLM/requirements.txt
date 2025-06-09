@@ -11,3 +11,4 @@ torchaudio
 numpy==1.24.3
 pyannote.audio
 openai-whisper
+konlpy
