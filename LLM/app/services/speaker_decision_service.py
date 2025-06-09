@@ -34,6 +34,8 @@ def speaker_decision_service(text: str):
         print(f"text decision iteration: {i}")
         print(f"decision_text: {decision_text}")
         if decision_text.find("SPEAKER_00") != -1 or decision_text.find("SPEAKER_01") != -1:
+            if i == 4:
+                data['messages'][0]['content'] += "너의 답변이 너무 많이 반복되고 있어. 대화 내용으로 결정하지 못한다면 SPEAKER_00, SPEAKER_01을 임의로 의사, 환자로 대치해줘"
             data['messages'][1]['content'] = f"{decision_text}"
             response = requests.post('http://hanyang-datascience.duckdns.org:5005/run', headers=headers, json=data)
             decision_text = response.json()['response']
