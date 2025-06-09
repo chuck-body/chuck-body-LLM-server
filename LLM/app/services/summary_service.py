@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+from konlpy.tag import Okt
 
 llm_api_key = os.getenv("LLM_API_KEY")
 
@@ -15,8 +16,16 @@ def find_char(str, c, dir: bool):
                 return i
     return -1
 
+def okt_tokenizer(text: str):
+    okt = Okt()
+    keywords = okt.nouns(text)
+    print(f"keywords: {keywords}")
+    return keywords
+
 def summary_service(text: str):
     print("summary_service start")
+    keywords = okt_tokenizer(text)
+    print(f"keywords: {keywords}")
     headers = {
         'Authorization': f"{llm_api_key}",
         'Content-Type': 'application/json'
@@ -28,13 +37,21 @@ def summary_service(text: str):
                 {'role':'system', 'content': 
                 """
                 다음 텍스트 내용을 요약해서 태그화 하고 싶어.
-                태그는 최대 5개까지 추천해줘.
-                주제에 맞는 태그를 추천해줘.
-                JSON 형식으로 변환해줘.
+                먼저 대화 텍스트 전체를 줄거야.
+                그다음은 대화 텍스트 내에서 명사에 해당하는 단어를 키워드들로 줄거야
+                해당 정보들을 기반으로 태그를 최대 5개 추천해줘.
+                그리고 마지막으로 JSON 형식으로 변환해줘.
+                필드는 'summary', 'tags' 두 개 뿐이야.
+                'summary' 필드는 대화 텍스트 요약 내용이고,
+                'tags' 필드는 태그 리스트이야.
                 """},
                 {'role':'user', 'content': 
                 f"""
-                {text}
+                텍스트: {text}
+                """},
+                {'role':'user', 'content': 
+                f"""
+                키워드들: {keywords}
                 """}
             ]
         }
