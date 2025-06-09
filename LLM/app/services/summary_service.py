@@ -1,7 +1,7 @@
 import os
 import json
 import requests
-from konlpy.tag import Okt
+from konlpy.tag import Okt, Komoran
 
 llm_api_key = os.getenv("LLM_API_KEY")
 
@@ -19,13 +19,23 @@ def find_char(str, c, dir: bool):
 def okt_tokenizer(text: str):
     okt = Okt()
     keywords = okt.nouns(text)
-    print(f"keywords: {keywords}")
+    print("=" * 10)
+    print(f"okt_keywords: {keywords}")
+    print("=" * 10)
+    return keywords
+
+def komoran_tokenizer(text: str):
+    komoran = Komoran()
+    keywords = komoran.nouns(text)
+    print("=" * 10)
+    print(f"komoran_keywords: {keywords}")
+    print("=" * 10)
     return keywords
 
 def summary_service(text: str):
     print("summary_service start")
-    keywords = okt_tokenizer(text)
-    print(f"keywords: {keywords}")
+    okt_keywords = okt_tokenizer(text)
+    komoran_keywords = komoran_tokenizer(text)
     headers = {
         'Authorization': f"{llm_api_key}",
         'Content-Type': 'application/json'
@@ -51,7 +61,7 @@ def summary_service(text: str):
                 """},
                 {'role':'user', 'content': 
                 f"""
-                키워드들: {keywords}
+                키워드들: {komoran_keywords}
                 """}
             ]
         }
